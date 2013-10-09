@@ -122,11 +122,8 @@ class FixtureLoader
                 $this->loadSqliteFixtureList($executor, $classList);
                 break;
             default:
-                if (true === $dropSchema) {
-                    // Prepare schema
-                    $schemaHelper = new SchemaLoader($executor->getObjectManager());
-                    $schemaHelper->load($this->purgeMode);
-                }
+                $schemaHelper = new SchemaLoader($executor->getObjectManager());
+                $schemaHelper->load($this->purgeMode);
 
                 // Load fixtures
                 $loader      = $this->getLoader($classList);
