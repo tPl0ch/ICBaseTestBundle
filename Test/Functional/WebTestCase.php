@@ -58,13 +58,7 @@ abstract class WebTestCase extends BaseWebTestCase
             return null;
         }
 
-        $fixtureList = static::getFixtureList();
-
-        if (empty($fixtureList) && ! $this->forceSchemaLoad) {
-            return;
-        }
-
-        $this->loadFixtures($fixtureList);
+        $this->loadFixtures(static::getFixtureList(), false, true);
     }
 
     /**
@@ -140,7 +134,7 @@ abstract class WebTestCase extends BaseWebTestCase
      *
      * @throws \InvalidArgumentException
      */
-    final public function loadFixtures($fixtureList, $mergeWithDefault = false)
+    final public function loadFixtures($fixtureList, $mergeWithDefault = false, $dropSchema = true)
     {
         if (!is_string($fixtureList) && !is_array($fixtureList)) {
             $type = gettype($fixtureList);
@@ -162,7 +156,7 @@ abstract class WebTestCase extends BaseWebTestCase
         }
 
         $fixtureLoader = new Loader\FixtureLoader($this->client, static::FIXTURES_PURGE_MODE);
-        $executor      = $fixtureLoader->load(static::MANAGER_NAME, $fixtureList);
+        $executor      = $fixtureLoader->load(static::MANAGER_NAME, $fixtureList, $dropSchema);
 
         $this->referenceRepository = $executor->getReferenceRepository();
 
