@@ -64,10 +64,11 @@ class FixtureLoader
      *
      * @param string $managerName Manager Name
      * @param array  $classList   Class List
+     * @param bool   $dropSchema  If schema should be dropped or not
      *
      * @return \Doctrine\Common\DataFixtures\Executor\ORMExecutor
      */
-    public function load($managerName = null, array $classList = array())
+    public function load($managerName = null, array $classList = array(), $dropSchema = true)
     {
         $container       = $this->client->getContainer();
         $managerRegistry = $container->get('doctrine');
@@ -77,7 +78,7 @@ class FixtureLoader
         $executor = $this->prepareExecutor($entityManager);
 
         // Preparing fixtures
-        $this->prepareFixtureList($executor, $classList);
+        $this->prepareFixtureList($executor, $classList, $dropSchema);
 
         return $executor;
     }
@@ -108,8 +109,9 @@ class FixtureLoader
      *
      * @param \Doctrine\Common\DataFixtures\Executor\ORMExecutor $executor  Executor
      * @param array                                              $classList Class List
+     * @param bool                                               $dropSchema
      */
-    private function prepareFixtureList(ORMExecutor $executor, array $classList)
+    private function prepareFixtureList(ORMExecutor $executor, array $classList, $dropSchema = true)
     {
         $connection = $executor->getObjectManager()->getConnection();
 
@@ -120,9 +122,11 @@ class FixtureLoader
                 $this->loadSqliteFixtureList($executor, $classList);
                 break;
             default:
-                // Prepare schema
-                $schemaHelper = new SchemaLoader($executor->getObjectManager());
-                $schemaHelper->load($this->purgeMode);
+                if (true === $dropSchema) {
+                    // Prepare schema
+                    $schemaHelper = new SchemaLoader($executor->getObjectManager());
+                    $schemaHelper->load($this->purgeMode);
+                }
 
                 // Load fixtures
                 $loader      = $this->getLoader($classList);
