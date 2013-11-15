@@ -193,7 +193,7 @@ class FixtureLoader
 
         $this->executePreLoadSubscriberEvent($fixtureList, $executor);
 
-        if (file_exists($backupDatabase)) {
+        if (false && file_exists($backupDatabase)) {
             $executor->getReferenceRepository()->load($backupDatabase);
 
             copy($backupDatabase, $database);
