@@ -21,7 +21,7 @@ use IC\Bundle\Base\TestBundle\Test\Loader;
  */
 abstract class WebTestCase extends BaseWebTestCase
 {
-    const ENVIRONMENT = 'test';
+    const ENVIRONMENT = TEST_ENVIRONMENT;
 
     const MANAGER_NAME = null;
 
