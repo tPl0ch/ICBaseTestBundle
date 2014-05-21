@@ -134,7 +134,7 @@ abstract class WebTestCase extends BaseWebTestCase
      *
      * @throws \InvalidArgumentException
      */
-    final public function loadFixtures($fixtureList, $mergeWithDefault = false, $dropSchema = true)
+    final public function loadFixtures($fixtureList, $mergeWithDefault = false, $dropSchema = false)
     {
         if (!is_string($fixtureList) && !is_array($fixtureList)) {
             $type = gettype($fixtureList);

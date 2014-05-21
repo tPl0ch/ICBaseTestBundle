@@ -68,7 +68,7 @@ class FixtureLoader
      *
      * @return \Doctrine\Common\DataFixtures\Executor\ORMExecutor
      */
-    public function load($managerName = null, array $classList = array(), $dropSchema = true)
+    public function load($managerName = null, array $classList = array(), $dropSchema = false)
     {
         $container       = $this->client->getContainer();
         $managerRegistry = $container->get('doctrine');
@@ -111,7 +111,7 @@ class FixtureLoader
      * @param array                                              $classList Class List
      * @param bool                                               $dropSchema
      */
-    private function prepareFixtureList(ORMExecutor $executor, array $classList, $dropSchema = true)
+    private function prepareFixtureList(ORMExecutor $executor, array $classList, $dropSchema = false)
     {
         $connection = $executor->getObjectManager()->getConnection();
 
@@ -119,7 +119,7 @@ class FixtureLoader
 
         switch (true) {
             case ($connection->getDriver() instanceof SqliteDriver):
-                $this->loadSqliteFixtureList($executor, $classList);
+                $this->loadSqliteFixtureList($executor, $classList, !$dropSchema);
                 break;
             default:
                 $schemaHelper = new SchemaLoader($executor->getObjectManager());
@@ -178,7 +178,7 @@ class FixtureLoader
      * @param \Doctrine\Common\DataFixtures\Executor\ORMExecutor $executor  Executor
      * @param array                                              $classList Class List
      */
-    private function loadSqliteFixtureList(ORMExecutor $executor, array $classList)
+    private function loadSqliteFixtureList(ORMExecutor $executor, array $classList, $useBackup = true)
     {
         $container      = $this->client->getContainer();
         $entityManager  = $executor->getObjectManager();
@@ -193,7 +193,7 @@ class FixtureLoader
 
         $this->executePreLoadSubscriberEvent($fixtureList, $executor);
 
-        if (file_exists($backupDatabase)) {
+        if ($useBackup && file_exists($backupDatabase)) {
             $executor->getReferenceRepository()->load($backupDatabase);
 
             copy($backupDatabase, $database);
