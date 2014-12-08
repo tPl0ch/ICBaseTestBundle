@@ -20,7 +20,7 @@ use IC\Bundle\Base\TestBundle\Test\Loader;
  */
 abstract class WebTestCase extends BaseWebTestCase
 {
-    const ENVIRONMENT = 'test';
+    const ENVIRONMENT = TEST_ENVIRONMENT;
 
     const MANAGER_NAME = null;
 
@@ -133,7 +133,7 @@ abstract class WebTestCase extends BaseWebTestCase
      *
      * @throws \InvalidArgumentException
      */
-    final public function loadFixtures($fixtureList, $mergeWithDefault = false, $dropSchema = true)
+    final public function loadFixtures($fixtureList, $mergeWithDefault = false, $dropSchema = false)
     {
         if (!is_string($fixtureList) && !is_array($fixtureList)) {
             $type = gettype($fixtureList);
